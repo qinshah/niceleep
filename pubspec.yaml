@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  os_type: ^0.2.2 # 系统类型
   # 媒体通知.鸿蒙适配
   audio_service:
     git:
