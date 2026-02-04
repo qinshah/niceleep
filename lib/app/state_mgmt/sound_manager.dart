@@ -46,7 +46,17 @@ class SoundManager extends ChangeNotifier {
     assert(_playingMap.length < _maxSoundCount, '数量溢出');
     // 否则添加到播放列表
     final player = AudioPlayer(playerId: asset.id);
-    await player.setPlayerMode(PlayerMode.lowLatency);
+    await player.setAudioContext(
+      AudioContext(
+        // 防止安卓停掉之前的音频
+        android: AudioContextAndroid(audioFocus: AndroidAudioFocus.none),
+        iOS: AudioContextIOS(
+          // iOS 需要 mixWithOthers 才能混音
+          category: AVAudioSessionCategory.playback,
+          options: const {AVAudioSessionOptions.mixWithOthers},
+        ),
+      ),
+    );
     await player.setSource(AssetSource(asset.path.replaceFirst('assets/', '')));
     await player.setReleaseMode(ReleaseMode.loop); // 设置为循环播放
     await player.setVolume(0.5); // 默认0.5音量
