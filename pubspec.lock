@@ -93,14 +93,13 @@ packages:
     source: hosted
     version: "5.2.1"
   audioplayers_darwin:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: "packages/audioplayers_darwin"
-      ref: HEAD
-      resolved-ref: e566d678531badc1437ada9fcca87c23d6355ba4
-      url: "https://gitcode.com/openharmony-sig/flutter_audioplayers.git"
-    source: git
-    version: "4.1.0"
+      name: audioplayers_darwin
+      sha256: "0811d6924904ca13f9ef90d19081e4a87f7297ddc19fc3d31f60af1aaafee333"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "6.3.0"
   audioplayers_linux:
     dependency: transitive
     description:
