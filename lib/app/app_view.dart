@@ -30,7 +30,7 @@ class _AppViewState extends State<AppView> {
       child: Consumer<ThemeCntlr>(
         builder: (context, themeCntlr, child) {
           return MaterialApp(
-            title: 'ncleep',
+            title: '响入睡',
             theme: themeCntlr.lightTheme,
             darkTheme: themeCntlr.darkTheme,
             themeMode: themeCntlr.themeMode,

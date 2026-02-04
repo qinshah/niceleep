@@ -55,6 +55,8 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           // ),
           _buildVolumeTile(context),
 
+          SizedBox(height: 100),
+
           _buildSectionHeader('其他'),
           // _buildListTile(
           //   icon: Icons.description,
@@ -66,11 +68,11 @@ class _SettingsPageViewState extends State<SettingsPageView> {
             icon: Icons.code,
             onTap: () => _launchUrl(Constant.github),
           ),
-          _buildListTile(
-            title: '反馈',
-            icon: Icons.feedback_outlined,
-            onTap: () => _launchUrl(Constant.issues),
-          ),
+          // _buildListTile(
+          //   title: '反馈',
+          //   icon: Icons.feedback_outlined,
+          //   onTap: () => _launchUrl(Constant.issues),
+          // ),
           _buildListTile(
             icon: Icons.privacy_tip_outlined,
             title: '隐私政策',
