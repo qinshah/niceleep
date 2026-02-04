@@ -2,7 +2,20 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "flutter build hap",
+      "label": "build apk",
+      "type": "shell",
+      "command": "flutter",
+      "args": [
+        "build",
+        "apk"
+      ],
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "build hap",
       "type": "shell",
       "command": "flutter",
       "args": [
@@ -15,12 +28,12 @@
       "problemMatcher": []
     },
     {
-      "label": "flutter build apk",
+      "label": "build app",
       "type": "shell",
       "command": "flutter",
       "args": [
         "build",
-        "apk"
+        "app"
       ],
       "presentation": {
         "reveal": "always"
