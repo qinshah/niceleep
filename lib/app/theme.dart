@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:niceleep/app/services/config_service.dart';
 
 enum ThemeColor {
   red(Color(0xFFB3261E), '樱桃红'),
@@ -17,11 +17,6 @@ enum ThemeColor {
 }
 
 class AppTheme {
-  static const String _themeKey = 'theme_mode';
-  static const String _colorKey = 'primary_color';
-  static const String _dynamicColorKey = 'dynamic_color';
-  static const String _blackBackgroundKey = 'black_background';
-
   // 默认主题色
   static final defaultSeedColor = ThemeColor.red.value;
   // 亮色主题
@@ -42,22 +37,22 @@ class AppTheme {
         outline: const Color(0xFF79747E),
       ),
       scaffoldBackgroundColor: const Color(0xFFFFFBFE),
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: Colors.white,
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
       ),
-      inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: const InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFE7E0EC),
+        fillColor: Color(0xFFE7E0EC),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
           borderSide: BorderSide.none,
         ),
       ),
-      navigationBarTheme: NavigationBarThemeData(
+      navigationBarTheme: const NavigationBarThemeData(
         backgroundColor: Colors.white,
-        indicatorColor: const Color(0xFFE7E0EC),
+        indicatorColor: Color(0xFFE7E0EC),
       ),
     );
   }
@@ -81,93 +76,63 @@ class AppTheme {
         outline: const Color(0xFF938F99),
       ),
       scaffoldBackgroundColor: const Color(0xFF1C1B1F),
-      cardTheme: CardThemeData(
-        color: const Color(0xFF2B2930),
+      cardTheme: const CardThemeData(
+        color: Color(0xFF2B2930),
         elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
       ),
-      inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: const InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF49454F),
+        fillColor: Color(0xFF49454F),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
           borderSide: BorderSide.none,
         ),
       ),
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: const Color(0xFF2B2930),
-        indicatorColor: const Color(0xFF49454F),
+      navigationBarTheme: const NavigationBarThemeData(
+        backgroundColor: Color(0xFF2B2930),
+        indicatorColor: Color(0xFF49454F),
       ),
     );
   }
 
   /// 从存储获取主题模式
   static Future<ThemeMode> getThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? savedTheme = prefs.getString(_themeKey);
-    switch (savedTheme) {
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-      case 'system':
-      default:
-        return ThemeMode.system;
-    }
+    return await ConfigService.getThemeMode();
   }
 
   /// 设置主题模式
   static Future<void> setThemeMode(ThemeMode mode) async {
-    final prefs = await SharedPreferences.getInstance();
-    String themeString;
-    switch (mode) {
-      case ThemeMode.light:
-        themeString = 'light';
-        break;
-      case ThemeMode.dark:
-        themeString = 'dark';
-        break;
-      case ThemeMode.system:
-        themeString = 'system';
-        break;
-    }
-    await prefs.setString(_themeKey, themeString);
+    await ConfigService.setThemeMode(mode);
   }
 
   /// 获取保存的主题色
   static Future<Color> getSeedColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    final int? savedColor = prefs.getInt(_colorKey);
-    return savedColor != null ? Color(savedColor) : defaultSeedColor;
+    return await ConfigService.getSeedColor();
   }
 
   /// 设置主题色
   static Future<void> setSeedColor(Color color) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_colorKey, color.value);
+    await ConfigService.setSeedColor(color);
   }
 
   /// 是否使用动态颜色
   static Future<bool> getUseDynamicColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_dynamicColorKey) ?? false;
+    return await ConfigService.getUseDynamicColor();
   }
 
   /// 设置动态颜色
   static Future<void> setUseDynamicColor(bool use) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_dynamicColorKey, use);
+    await ConfigService.setUseDynamicColor(use);
   }
 
   /// 是否使用纯黑背景
   static Future<bool> getUseBlackBackground() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_blackBackgroundKey) ?? false;
+    return await ConfigService.getUseBlackBackground();
   }
 
   /// 设置纯黑背景
   static Future<void> setUseBlackBackground(bool use) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_blackBackgroundKey, use);
+    await ConfigService.setUseBlackBackground(use);
   }
 }

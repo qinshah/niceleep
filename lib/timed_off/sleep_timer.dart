@@ -25,7 +25,7 @@ class SleepTimer {
       if (_remainingTime! <= Duration.zero) {
         timer.cancel();
         _timerNotifier.value = null;
-        isExit ? exit(0) : SoundManager.i.stopAllSound();
+        isExit ? exit(0) : SoundManager.i.stopAll();
       }
     });
   }

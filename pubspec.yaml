@@ -19,11 +19,14 @@ dependencies:
     git:
       url: https://gitcode.com/openharmony-sig/flutter_audio_session.git
       ref: br_v0.2.2_ohos
-  shared_preferences: # 存储.鸿蒙适配
-    git:
-      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
-      path: "packages/shared_preferences/shared_preferences"
-      ref: "br_shared_preferences-v2.5.3_ohos"
+   # hive存储，纯dart，支持鸿蒙
+  hive_ce: ^2.16.0
+  hive_ce_flutter: ^2.3.3
+  # shared_preferences: # 存储.鸿蒙适配
+  #   git:
+  #     url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+  #     path: "packages/shared_preferences/shared_preferences"
+  #     ref: "br_shared_preferences-v2.5.3_ohos"
   file_selector: # 文件选择器.鸿蒙适配
     git:
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
@@ -34,9 +37,6 @@ dependencies:
       url: https://gitcode.com/openharmony-tpc/flutter_packages.git
       path: packages/url_launcher/url_launcher
       ref: br_url_launcher_v6.3.1_ohos
-   # hive存储，纯dart，支持鸿蒙
-  hive_ce: ^2.16.0
-  hive_ce_flutter: ^2.3.3
   audioplayers: # 音频播放.鸿蒙适配
     git:
       url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
@@ -48,7 +48,7 @@ dependencies:
 
 dependency_overrides:
   package_info_plus: # app信息.鸿蒙适配
-    git: 
+    git:
       url: https://gitcode.com/openharmony-sig/flutter_plus_plugins.git
       path: packages/package_info_plus/package_info_plus
       ref: br_package_info_plus-v8.1.0_ohos
@@ -85,6 +85,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  build_runner: ^2.4.11
+  hive_ce_generator: ^1.11.1
 
 flutter:
   uses-material-design: true
