@@ -46,7 +46,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           _buildThemeTile(context),
           const SizedBox(height: 24),
 
-          _buildSectionHeader('系统'),
+          _buildSectionHeader('声音'),
           // _buildListTile(
           //   icon: Icons.language,
           //   title: '语言',
@@ -54,8 +54,23 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           //   onTap: () => _showLanguageSelectionDialog(context),
           // ),
           _buildVolumeTile(context),
+          Builder(
+            builder: (context) {
+              final maxSoundCount = context.select<SoundManager, int>(
+                (manager) => manager.maxSoundCount,
+              );
+              return _buildListTile(
+                title: '最大音频数',
+                icon: Icons.queue_music, // 更换为表示数量/队列的图标
+                subtitle: '$maxSoundCount个',
+                onTap: () {
+                  _showMaxSoundCountDialog(context, maxSoundCount);
+                },
+              );
+            },
+          ),
 
-          SizedBox(height: 100),
+          SizedBox(height: 50),
 
           _buildSectionHeader('其他'),
           // _buildListTile(
@@ -63,11 +78,6 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           //   title: '用户协议',
           //   onTap: () => _launchUrl('https://example.com/terms'),
           // ),
-          _buildListTile(
-            title: 'Source Code',
-            icon: Icons.code,
-            onTap: () => _launchUrl(Constant.github),
-          ),
           // _buildListTile(
           //   title: '反馈',
           //   icon: Icons.feedback_outlined,
@@ -77,6 +87,11 @@ class _SettingsPageViewState extends State<SettingsPageView> {
             icon: Icons.privacy_tip_outlined,
             title: '隐私政策',
             onTap: () => _launchUrl(Constant.privacy),
+          ),
+          _buildListTile(
+            title: 'Source Code',
+            icon: Icons.code,
+            onTap: () => _launchUrl(Constant.github),
           ),
           SizedBox(height: 16),
           Center(
@@ -245,7 +260,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: ListTile(
@@ -254,17 +269,21 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         title: Text(
-          '调整所有音量',
+          '统一调整音量',
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.w500,
           ),
         ),
         subtitle: Text(
-          '统一调整音量',
+          '调整所有正在播放的音频音量',
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
+        ),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         onTap: () => _showVolumeAdjustDialog(context),
       ),
@@ -322,6 +341,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           content: StatefulBuilder(
             builder: (context, setDialogState) {
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text('应用到所有正在播放的声音'),
@@ -349,6 +369,84 @@ class _SettingsPageViewState extends State<SettingsPageView> {
               );
             },
           ),
+        );
+      },
+    );
+  }
+
+  void _showMaxSoundCountDialog(BuildContext context, int currentCount) {
+    int selectedCount = currentCount;
+    final min = 5;
+    final max = 20;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('最大音频数'),
+          content: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('同时播放的音频数量上限'),
+                  const Text('过多音频同时播放会导致卡顿'),
+                  const SizedBox(height: 16),
+                  Slider(
+                    value: selectedCount.toDouble(),
+                    min: min.toDouble(),
+                    max: max.toDouble(),
+                    divisions: max - min,
+                    label: selectedCount.toString(),
+                    onChanged: (value) {
+                      setDialogState(() => selectedCount = value.toInt());
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(min.toString()),
+                      Text('$selectedCount个'),
+                      Text(max.toString()),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                final success = await SoundManager.i.setMaxSoundCount(
+                  selectedCount,
+                );
+                if (success) {
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    // 显示成功提示
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('最大音频数已设置为 $selectedCount 个'),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('设置失败'),
+                        duration: Duration(seconds: 2),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              child: const Text('确定'),
+            ),
+          ],
         );
       },
     );

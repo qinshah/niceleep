@@ -234,7 +234,7 @@ class SoundCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playing = context.select<SoundManager, bool>(
-      (soundManager) => soundManager.isSoundPlaying(soundAsset),
+      (soundManager) => soundManager.isPlaying(soundAsset),
     );
     return Container(
       decoration: BoxDecoration(
@@ -244,8 +244,8 @@ class SoundCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: playing
               ? [
-                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
                 ]
               : [
                   Theme.of(context).colorScheme.surface,
@@ -271,7 +271,19 @@ class SoundCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => SoundManager.i.onTapSound(soundAsset),
+          onTap: () {
+            if (playing) {
+              SoundManager.i.stop(soundAsset);
+            } else if (SoundManager.i.countMaximum()) {
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              scaffoldMessenger.removeCurrentSnackBar();
+              scaffoldMessenger.showSnackBar(
+                SnackBar(content: Text('已达到最大播放数')),
+              );
+            } else {
+              SoundManager.i.play(soundAsset);
+            }
+          },
           borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -401,7 +413,7 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
               ),
               TextButton(
                 onPressed: () {
-                  SoundManager.i.stopAllSound();
+                  SoundManager.i.stopAll();
                   Navigator.pop(context);
                 },
                 child: const Text('全部停止'),
@@ -451,7 +463,7 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                                 IconButton(
                                   icon: const Icon(Icons.stop),
                                   onPressed: () =>
-                                      SoundManager.i.stopSound(playingSound),
+                                      SoundManager.i.stop(soundAsset),
                                 ),
                               ],
                             ),

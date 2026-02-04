@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:niceleep/app/data_model/playing_sound.dart';
 import 'package:niceleep/app/data_model/sound_asset.dart';
+import 'package:niceleep/app/services/config_service.dart';
 
 class SoundManager extends ChangeNotifier {
   SoundManager._();
@@ -17,12 +18,32 @@ class SoundManager extends ChangeNotifier {
 
   // late final AudioSession _audioSession;
 
-  Future<void> onTapSound(SoundAsset asset) async {
-    // 如果在播放，移除
-    if (_playingMap.containsKey(asset.id)) {
-      stopSound(_playingMap[asset.id]!);
-      return;
+  int _maxSoundCount = 10;
+
+  int get maxSoundCount => _maxSoundCount;
+
+  // 初始化时从Hive加载最大声音数量
+  Future<void> init() async {
+    _maxSoundCount = await ConfigService.getMaxSoundCount();
+    notifyListeners();
+  }
+
+  Future<bool> setMaxSoundCount(int count) async {
+    try {
+      await ConfigService.setMaxSoundCount(count);
+      _maxSoundCount = count;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
     }
+  }
+
+  bool countMaximum() => _playingMap.length >= _maxSoundCount;
+
+  Future<void> play(SoundAsset asset) async {
+    assert(!_playingMap.containsKey(asset.id), '此音频已在播放');
+    assert(_playingMap.length < _maxSoundCount, '数量溢出');
     // 否则添加到播放列表
     final player = AudioPlayer(playerId: asset.id);
     await player.setPlayerMode(PlayerMode.lowLatency);
@@ -45,13 +66,15 @@ class SoundManager extends ChangeNotifier {
     }
   }
 
-  void stopSound(PlayingSound playingSound) {
+  void stop(SoundAsset asset) {
+    final playingSound = _playingMap[asset.id];
+    if (playingSound == null) throw '音频未在播放';
     playingSound.player.dispose();
     _playingMap.remove(playingSound.asset.id);
     notifyListeners();
   }
 
-  void stopAllSound() {
+  void stopAll() {
     for (var playingSound in _playingMap.values) {
       playingSound.player.dispose();
     }
@@ -61,11 +84,11 @@ class SoundManager extends ChangeNotifier {
 
   @override
   void dispose() {
-    stopAllSound();
+    stopAll();
     super.dispose();
   }
 
-  bool isSoundPlaying(SoundAsset sound) {
+  bool isPlaying(SoundAsset sound) {
     return _playingMap.containsKey(sound.id);
   }
 }
