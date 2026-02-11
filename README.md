@@ -4,14 +4,39 @@
 
 安卓建议直接用原版[XMSLEEP](https://github.com/Tosencen/XMSLEEP)
 
-安装包200m音频占了160m，目前不知道怎么优化
+安装包200m是音频占了160m
 
 ## 目前打包的平台
 
 - [x] Android
 - [x] HarmonyOS
 
-## 截图
+## 📱 截图
+
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="screenshot/首页.jpg"/>
+    </td>
+    <td align="center">
+      <img src="screenshot/正在播放.jpg"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshot/定时关闭.jpg"/>
+    </td>
+    <td align="center">
+      <img src="screenshot/主题.jpg"/>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+---
 
 # 致谢
 
