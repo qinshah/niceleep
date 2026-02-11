@@ -83,11 +83,15 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           //   icon: Icons.feedback_outlined,
           //   onTap: () => _launchUrl(Constant.issues),
           // ),
-          _buildListTile(
-            icon: Icons.privacy_tip_outlined,
-            title: '隐私政策',
-            onTap: () => _launchUrl(Constant.privacy),
-          ),
+
+          // 仅商店版显示隐私政策
+          if (Constant.isStoreVersion)
+            _buildListTile(
+              icon: Icons.privacy_tip_outlined,
+              title: '隐私政策',
+              onTap: () => _launchUrl(Constant.privacy),
+            ),
+
           _buildListTile(
             title: 'Source Code',
             icon: Icons.code,

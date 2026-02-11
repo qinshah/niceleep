@@ -8,12 +8,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // 如果需要在鸿蒙上判断是否为PC/Mobile，需要先await OS.initHarmonyDeviceType()
   if (OS.isHarmony) await OS.initHarmonyDeviceType();
-  
+
   // 初始化配置服务
   await ConfigService.init();
-  
+
   // 初始化声音管理器
   await SoundManager.i.init();
-  
+
   runApp(const AppView());
 }
