@@ -1,4 +1,4 @@
-# NICELEEP
+# 响入睡
 
 [XMSLEEP](https://github.com/Tosencen/XMSLEEP)的flutter copy版
 
@@ -10,6 +10,8 @@
 
 - [x] Android
 - [x] HarmonyOS
+
+其中鸿蒙版已上架：[商店链接](https://appgallery.huawei.com/app/detail?id=com.qshh.niceleep&channelId=LAUNCHERSHARE)
 
 ## 📱 截图
 
@@ -42,3 +44,5 @@
 
 - [XMSLEEP](https://github.com/Tosencen/XMSLEEP)
 - 等等
+
+# 开源协议: [MIT](LICENSE)
