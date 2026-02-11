@@ -28,17 +28,32 @@
       "problemMatcher": []
     },
     {
-      "label": "build app",
+      "label": "build app(store version)",
       "type": "shell",
       "command": "flutter",
       "args": [
         "build",
-        "app"
+        "app",
+        "--dart-define-from-file=.vscode/env.json",
       ],
       "presentation": {
         "reveal": "always"
       },
+      "dependsOn": [
+        "env_gen"
+      ],
       "problemMatcher": []
-    }
+    },
+    {
+      "label": "env_gen",
+      "type": "shell",
+      "command": "dart",
+      "args": [
+        ".vscode/env_gen.dart"
+      ],
+      "presentation": {
+        "reveal": "silent"
+      }
+    },
   ]
 }

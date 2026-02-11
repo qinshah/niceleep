@@ -9,14 +9,22 @@
             "noDebug": true,
             "type": "dart",
             "request": "launch",
-            "program": "lib/main.dart"
+        },
+        {
+            "name": "run store release",
+            "flutterMode": "release",
+            "type": "dart",
+            "request": "launch",
+            "preLaunchTask": "env_gen",
+            "args": [
+                "--dart-define-from-file=.vscode/env.json"
+            ],
         },
         {
             "name": "run release",
+            "flutterMode": "release",
             "type": "dart",
             "request": "launch",
-            "program": "lib/main.dart",
-            "flutterMode": "release"
         }
     ]
 }
