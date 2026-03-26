@@ -1,8 +1,8 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:niceleep/app/state_mgmt/sound_manager.dart';
-import '../app/data_model/sound_asset.dart';
+import 'package:niceleep/app/data_model/sound_asset.dart';
+import 'package:niceleep/app/services/sound_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,43 +13,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedCategory = 0; // 0 = 全部
-  bool _isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadSounds();
-  }
-
-  Future<void> _loadSounds() async {
-    await SoundAsset.scanAssets();
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  List<String> get _categories => SoundAsset.getCategories();
+  List<String> get _categories => SoundService.instance.getCategoryNames();
 
   List<SoundAsset> get _filteredSounds {
-    if (_isLoading) return [];
     final category = _selectedCategory == 0
         ? '全部'
         : _categories[_selectedCategory];
-    return SoundAsset.getByCategory(category);
+    return SoundService.instance.getSoundsByCategory(category);
   }
 
   /// 获取按分类分组的声音（用于「全部」tab页）
   Map<String, List<SoundAsset>> get _groupedSounds {
-    final Map<String, List<SoundAsset>> grouped = {};
-    for (final sound in SoundAsset.getByCategory('全部')) {
-      if (!grouped.containsKey(sound.category)) {
-        grouped[sound.category] = [];
-      }
-      grouped[sound.category]!.add(sound);
-    }
-    return grouped;
+    return SoundService.instance.getSoundsGroupedByCategory();
   }
 
   @override
@@ -71,10 +47,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             const SizedBox(height: 16),
             _buildCategories(),
-            const SizedBox(height: 16),
-            _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedCategory == 0
+            const SizedBox(height: 16), _selectedCategory == 0
                 ? _buildGroupedSoundsGrid()
                 : _buildSoundsGrid(),
           ],

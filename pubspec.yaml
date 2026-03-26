@@ -93,6 +93,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/sounds.json
     - assets/sounds/animals/
     - assets/sounds/music/
     - assets/sounds/nature/
