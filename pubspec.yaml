@@ -38,14 +38,34 @@ dependencies:
       url: https://gitcode.com/openharmony-tpc/flutter_packages.git
       path: packages/url_launcher/url_launcher
       ref: br_url_launcher_v6.3.1_ohos
-  audioplayers: # 音频播放.鸿蒙适配
-    git:
-      url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
-      path: packages/audioplayers
-      ref: br_v6.5.0_ohos
+  # audioplayers: # 音频播放.鸿蒙适配
+  #   git:
+  #     url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
+  #     path: packages/audioplayers
+  #     ref: br_v6.5.0_ohos
   provider: ^6.1.5+1
   icons_launcher: ^3.0.3
   package_info_plus: # app信息.鸿蒙适配
+  # 媒体.互相兼容
+  media_kit:
+    git:
+      url: https://github.com/Predidit/media-kit.git
+      ref: afb5a1b179c212eac74a40012f21703d122112a5
+      path: ./media_kit
+  media_kit_video:
+    git:
+      url: https://github.com/Predidit/media-kit.git
+      ref: afb5a1b179c212eac74a40012f21703d122112a5
+      path: ./media_kit_video
+  media_kit_libs_video:
+    git:
+      url: https://github.com/Predidit/media-kit.git
+      ref: afb5a1b179c212eac74a40012f21703d122112a5
+      path: ./libs/universal/media_kit_libs_video
+  # path_provider: # 应用可用路径.鸿蒙适配
+  #   git:
+  #     url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+  #     path: "packages/path_provider/path_provider"
 
 dependency_overrides:
   package_info_plus: # app信息.鸿蒙适配
@@ -53,35 +73,35 @@ dependency_overrides:
       url: https://gitcode.com/openharmony-sig/flutter_plus_plugins.git
       path: packages/package_info_plus/package_info_plus
       ref: br_package_info_plus-v8.1.0_ohos
-  # 修复鸿蒙audioplayers在其它平台出错
-  audioplayers_android: ^5.2.1
-  audioplayers_darwin: ^6.3.0
-  audioplayers_platform_interface: ^7.1.1
+  # # 修复鸿蒙audioplayers在其它平台出错
+  # audioplayers_android: ^5.2.1
+  # audioplayers_darwin: ^6.3.0
+  # audioplayers_platform_interface: ^7.1.1
   path_provider: # 应用可用路径.鸿蒙适配
     git:
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
       path: "packages/path_provider/path_provider"
-  # 媒体.鸿蒙适配
-  media_kit:
+  # 媒体.互相兼容
+  media_kit_libs_linux:
     git:
-      url: https://github.com/ErBWs/media-kit.git
-      ref: feat-ohos
-      path: ./media_kit
+      url: https://github.com/Predidit/media-kit.git
+      ref: afb5a1b179c212eac74a40012f21703d122112a5
+      path: ./libs/linux/media_kit_libs_linux
+  media_kit_libs_ios_video:
+    git:
+      url: https://github.com/Predidit/media-kit.git
+      ref: afb5a1b179c212eac74a40012f21703d122112a5
+      path: ./libs/ios/media_kit_libs_ios_video
+  media_kit_libs_macos_video:
+    git:
+      url: https://github.com/Predidit/media-kit.git
+      ref: afb5a1b179c212eac74a40012f21703d122112a5
+      path: ./libs/macos/media_kit_libs_macos_video
   media_kit_libs_ohos:
     git:
-      url: https://github.com/ErBWs/media-kit.git
-      ref: feat-ohos
+      url: https://github.com/Predidit/media-kit.git
+      ref: afb5a1b179c212eac74a40012f21703d122112a5
       path: ./libs/ohos/media_kit_libs_ohos
-  media_kit_video:
-    git:
-      url: https://github.com/ErBWs/media-kit.git
-      ref: feat-ohos
-      path: ./media_kit_video
-  media_kit_libs_video:
-    git:
-      url: https://github.com/ErBWs/media-kit.git
-      ref: feat-ohos
-      path: ./libs/universal/media_kit_libs_video
 
 dev_dependencies:
   flutter_test:
@@ -94,15 +114,14 @@ flutter:
   uses-material-design: true
   assets:
     - assets/sounds.json
-    - assets/sounds/animals/
-    - assets/sounds/music/
-    - assets/sounds/nature/
-    - assets/sounds/noise/
-    - assets/sounds/places/
-    - assets/sounds/rain/
-    - assets/sounds/things/
-    - assets/sounds/transport/
-    - assets/sounds/urban/
+    - assets/audio/animals/
+    - assets/audio/nature/
+    - assets/audio/noise/
+    - assets/audio/places/
+    - assets/audio/rain/
+    - assets/audio/things/
+    - assets/audio/transport/
+    - assets/audio/urban/
 
 icons_launcher:
   image_path: "assets/logo.png"
