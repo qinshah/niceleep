@@ -47,7 +47,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             const SizedBox(height: 16),
             _buildCategories(),
-            const SizedBox(height: 16), _selectedCategory == 0
+            const SizedBox(height: 16),
+            _selectedCategory == 0
                 ? _buildGroupedSoundsGrid()
                 : _buildSoundsGrid(),
           ],
@@ -449,7 +450,8 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                             ),
                             child: StatefulBuilder(
                               builder: (context, setVolumeBarState) {
-                                final volume = playingSound.player.volume;
+                                final volume =
+                                    playingSound.player.state.volume / 100;
                                 return Row(
                                   children: [
                                     Icon(
@@ -480,8 +482,9 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                                           divisions: 20,
                                           onChanged: (value) {
                                             setVolumeBarState(() {
-                                              playingSound.player.setVolume(
-                                                value,
+                                              SoundManager.i.setVolume(
+                                                playingSound: playingSound,
+                                                volume: value,
                                               );
                                             });
                                           },

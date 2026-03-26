@@ -307,9 +307,9 @@ class _ThemePageViewState extends State<ThemePageView> {
     );
   }
 
-  Color _getContrastColor(Color color) {
-    // 计算颜色亮度，返回对比色
-    final luminance = color.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
-  }
+  // Color _getContrastColor(Color color) {
+  //   // 计算颜色亮度，返回对比色
+  //   final luminance = color.computeLuminance();
+  //   return luminance > 0.5 ? Colors.black : Colors.white;
+  // }
 }
