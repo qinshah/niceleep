@@ -61,17 +61,16 @@ class SoundManager extends ChangeNotifier {
     try {
       // 创建 media_kit Player
       final player = Player();
-
+      notifyListeners(); // 先刷新UI
+      _playingMap[asset.id] = PlayingSound(asset: asset, player: player);
       // 设置为循环播放
-      await player.setPlaylistMode(PlaylistMode.loop);
+      player.setPlaylistMode(PlaylistMode.loop);
       // 设置默认音量 0.5
-      await player.setVolume(50.0); // media_kit 音量范围是 0-100
-
+      player.setVolume(50.0); // media_kit 音量范围是 0-100
       // 播放 asset 路径的音频
       // asset.path 格式为 'assets/sounds/nature/wind.ogg'
       final assetPath = asset.path;
       debugPrint('尝试播放 asset: $assetPath');
-
       // 先尝试直接使用 asset:// 路径
       try {
         final assetUri = 'asset:///$assetPath';
@@ -80,7 +79,6 @@ class SoundManager extends ChangeNotifier {
         await player.play();
       } catch (e) {
         debugPrint('直接 asset:// 方式失败: $e');
-
         // 直接方式失败，尝试使用临时文件
         try {
           final tempDir = Directory.systemTemp;
@@ -105,15 +103,16 @@ class SoundManager extends ChangeNotifier {
             await player.play();
           }
         } catch (e2) {
-          debugPrint('临时文件方式也失败: $e2');
+          throw '临时文件方式也失败: $e2';
         }
       }
-
       _audioHandler.play();
       notifyListeners();
       _playingMap[asset.id] = PlayingSound(asset: asset, player: player);
     } catch (e) {
-      debugPrint('播放失败: $e');
+      notifyListeners();
+      stop(asset); // 播放失败时调用stop以免UI错误
+      throw '播放失败: $e';
     }
   }
 
