@@ -1,4 +1,8 @@
 abstract class Constant {
+  static const appName = '响入睡';
+
+  static const packageName = 'com.qshh.niceleep';
+
   static const github = 'https://github.com/qinshah/niceleep';
 
   static const issues = '$github/issues';

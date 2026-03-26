@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:niceleep/app/constant.dart';
 import 'package:niceleep/settings/state_mgmt/theme_cntlr.dart';
 import 'package:provider/provider.dart';
 import 'package:niceleep/app/state_mgmt/sound_manager.dart';
@@ -30,7 +31,7 @@ class _AppViewState extends State<AppView> {
       child: Consumer<ThemeCntlr>(
         builder: (context, themeCntlr, child) {
           return MaterialApp(
-            title: '响入睡',
+            title: Constant.appName,
             theme: themeCntlr.lightTheme,
             darkTheme: themeCntlr.darkTheme,
             themeMode: themeCntlr.themeMode,
