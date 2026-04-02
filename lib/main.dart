@@ -3,7 +3,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:niceleep/app/app_view.dart';
 import 'package:niceleep/app/services/config_service.dart';
 import 'package:niceleep/app/services/sound_service.dart';
-import 'package:niceleep/app/state_mgmt/sound_manager.dart';
+import 'package:niceleep/app/state_mgmt/play_manager.dart';
 import 'package:os_type/os_type.dart';
 
 void main() async {
@@ -18,7 +18,7 @@ void main() async {
   // 初始化media_kit
   MediaKit.ensureInitialized();
   // 初始化声音管理器
-  await SoundManager.i.init();
+  await PlayManager.i.init();
 
   runApp(const AppView());
 }

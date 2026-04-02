@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:niceleep/app/state_mgmt/sound_manager.dart';
+import 'package:niceleep/app/state_mgmt/play_manager.dart';
 import 'package:niceleep/app/data_model/sound_asset.dart';
 import 'package:niceleep/app/services/sound_service.dart';
 
@@ -207,7 +207,7 @@ class SoundCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playing = context.select<SoundManager, bool>(
+    final playing = context.select<PlayManager, bool>(
       (soundManager) => soundManager.isPlaying(soundAsset),
     );
     return Container(
@@ -247,15 +247,15 @@ class SoundCard extends StatelessWidget {
         child: InkWell(
           onTap: () {
             if (playing) {
-              SoundManager.i.stop(soundAsset);
-            } else if (SoundManager.i.countMaximum()) {
+              PlayManager.i.stopByAsset(soundAsset);
+            } else if (PlayManager.i.countMaximum()) {
               final scaffoldMessenger = ScaffoldMessenger.of(context);
               scaffoldMessenger.removeCurrentSnackBar();
               scaffoldMessenger.showSnackBar(
                 SnackBar(content: Text('已达到最大播放数')),
               );
             } else {
-              SoundManager.i.play(soundAsset);
+              PlayManager.i.playNew(soundAsset);
             }
           },
           borderRadius: BorderRadius.circular(16),
@@ -358,7 +358,7 @@ class PlayingListSheet extends StatefulWidget {
 class _PlayingListSheetState extends State<PlayingListSheet> {
   @override
   Widget build(BuildContext context) {
-    final playingSounds = context.watch<SoundManager>().playingSounds;
+    final playingSounds = context.watch<PlayManager>().playingSounds;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -376,7 +376,7 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('正在播放', style: Theme.of(context).textTheme.titleLarge),
+                  Text('播放列表', style: Theme.of(context).textTheme.titleLarge),
                   Text(
                     '${playingSounds.length} 个声音',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -387,8 +387,8 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
               ),
               TextButton(
                 onPressed: () {
-                  SoundManager.i.stopAll();
                   Navigator.pop(context);
+                  PlayManager.i.stopAll();
                 },
                 child: const Text('全部停止'),
               ),
@@ -434,10 +434,31 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                IconButton(
-                                  icon: const Icon(Icons.stop),
-                                  onPressed: () =>
-                                      SoundManager.i.stop(soundAsset),
+                                Builder(
+                                  builder: (context) {
+                                    final pausing = context
+                                        .select<PlayManager, bool?>(
+                                          (manager) =>
+                                              manager.isPausing(soundAsset),
+                                        );
+                                    if (pausing == null) {
+                                      return const SizedBox();
+                                    }
+                                    if (pausing) {
+                                      return IconButton(
+                                        icon: const Icon(Icons.play_arrow),
+                                        onPressed: () {
+                                          PlayManager.i.resume(soundAsset);
+                                        },
+                                      );
+                                    }
+                                    return IconButton(
+                                      icon: const Icon(Icons.stop),
+                                      onPressed: () {
+                                        PlayManager.i.stopByAsset(soundAsset);
+                                      },
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -482,7 +503,7 @@ class _PlayingListSheetState extends State<PlayingListSheet> {
                                           divisions: 20,
                                           onChanged: (value) {
                                             setVolumeBarState(() {
-                                              SoundManager.i.setVolume(
+                                              PlayManager.i.setVolume(
                                                 playingSound: playingSound,
                                                 volume: value,
                                               );

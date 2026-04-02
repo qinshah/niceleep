@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:niceleep/app/state_mgmt/sound_manager.dart';
+import 'package:niceleep/app/state_mgmt/play_manager.dart';
 
 class SleepTimer {
   SleepTimer._();
@@ -25,7 +25,7 @@ class SleepTimer {
       if (_remainingTime! <= Duration.zero) {
         timer.cancel();
         _timerNotifier.value = null;
-        isExit ? exit(0) : SoundManager.i.stopAll();
+        isExit ? exit(0) : PlayManager.i.stopAll();
       }
     });
   }

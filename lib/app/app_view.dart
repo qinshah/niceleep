@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:niceleep/app/constant.dart';
 import 'package:niceleep/settings/state_mgmt/theme_cntlr.dart';
 import 'package:provider/provider.dart';
-import 'package:niceleep/app/state_mgmt/sound_manager.dart';
+import 'package:niceleep/app/state_mgmt/play_manager.dart';
 import 'package:niceleep/timed_off/timed_off_page_view.dart';
 import 'package:niceleep/home/home_page.dart';
 import 'package:niceleep/settings/settings_page_view.dart';
@@ -17,7 +17,7 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   @override
   void dispose() {
-    SoundManager.i.dispose();
+    PlayManager.i.dispose();
     super.dispose();
   }
 
@@ -25,7 +25,7 @@ class _AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: SoundManager.i),
+        ChangeNotifierProvider.value(value: PlayManager.i),
         ChangeNotifierProvider.value(value: ThemeCntlr.i),
       ],
       child: Consumer<ThemeCntlr>(

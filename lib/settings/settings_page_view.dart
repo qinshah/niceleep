@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:niceleep/app/constant.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:niceleep/app/state_mgmt/sound_manager.dart';
+import 'package:niceleep/app/state_mgmt/play_manager.dart';
 import 'package:niceleep/settings/state_mgmt/theme_cntlr.dart';
 import 'package:provider/provider.dart';
 import 'theme_page_view.dart';
@@ -56,7 +56,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           _buildVolumeTile(context),
           Builder(
             builder: (context) {
-              final maxSoundCount = context.select<SoundManager, int>(
+              final maxSoundCount = context.select<PlayManager, int>(
                 (manager) => manager.maxSoundCount,
               );
               return _buildListTile(
@@ -358,7 +358,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
                     onChanged: (value) {
                       setDialogState(() => volume = value);
                       // 实时更新全局音量
-                      SoundManager.i.setAllVolume(value);
+                      PlayManager.i.setAllVolume(value);
                     },
                   ),
                   Row(
@@ -422,7 +422,7 @@ class _SettingsPageViewState extends State<SettingsPageView> {
           actions: [
             TextButton(
               onPressed: () async {
-                final success = await SoundManager.i.setMaxSoundCount(
+                final success = await PlayManager.i.setMaxSoundCount(
                   selectedCount,
                 );
                 if (success) {

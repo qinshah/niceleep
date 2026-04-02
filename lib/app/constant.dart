@@ -7,6 +7,8 @@ abstract class Constant {
 
   static const issues = '$github/issues';
 
+  static const logoUrl = 'https://raw.gitcode.com/qinshah/image/raw/main/logo2.png';
+
   static const privacy =
       'https://agreement-drcn.hispace.dbankcloud.cn/index.html?lang=zh&agreementId=1878154319170164032';
 
