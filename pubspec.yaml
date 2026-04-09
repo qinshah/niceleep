@@ -62,10 +62,21 @@ dependencies:
       url: https://github.com/Predidit/media-kit.git
       ref: afb5a1b179c212eac74a40012f21703d122112a5
       path: ./libs/universal/media_kit_libs_video
+  hux: ^1.1.0
   # path_provider: # 应用可用路径.鸿蒙适配
   #   git:
   #     url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
   #     path: "packages/path_provider/path_provider"
+  
+  # AI-Native 相关依赖
+  # google_generative_ai: ^0.4.0  # 预留，后续需要时添加
+  # langchain: ^0.7.0  # 预留，后续需要时添加
+  # langchain_google: ^0.2.0  # 预留，后续需要时添加
+  # mcp_dart: ^0.1.0  # 预留，后续需要时添加
+  # flutter_gemma: ^0.2.0  # 预留，后续需要时添加
+  # flutter_ai_toolkit: ^0.3.0  # 预留，后续需要时添加
+  # mobile_rag_engine: ^0.1.0  # 预留，后续需要时添加
+  vector_math: ^2.1.4
 
 dependency_overrides:
   package_info_plus: # app信息.鸿蒙适配

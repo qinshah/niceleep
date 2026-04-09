@@ -4,6 +4,7 @@ import 'package:niceleep/app/app_view.dart';
 import 'package:niceleep/app/services/config_service.dart';
 import 'package:niceleep/app/services/sound_service.dart';
 import 'package:niceleep/app/state_mgmt/play_manager.dart';
+import 'package:niceleep/ai/ai_service.dart';
 import 'package:os_type/os_type.dart';
 
 void main() async {
@@ -19,6 +20,8 @@ void main() async {
   MediaKit.ensureInitialized();
   // 初始化声音管理器
   await PlayManager.i.init();
+  // 初始化 AI 服务
+  await AiService.instance.initialize();
 
   runApp(const AppView());
 }
