@@ -6,6 +6,7 @@ import 'package:niceleep/app/state_mgmt/play_manager.dart';
 import 'package:niceleep/timed_off/timed_off_page_view.dart';
 import 'package:niceleep/home/home_page.dart';
 import 'package:niceleep/settings/settings_page_view.dart';
+import 'package:niceleep/ai/ui/ai_chat_page.dart';
 
 class AppView extends StatefulWidget {
   const AppView({super.key});
@@ -52,9 +53,11 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
+  final PageStorageBucket _bucket = PageStorageBucket();
 
-  List<Widget> get _pages => [
+  final List<Widget> _pages = [
     const HomePage(),
+    const AiChatPage(),
     const TimedOffPageView(),
     const SettingsPageView(),
   ];
@@ -62,7 +65,13 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: PageStorage(
+        bucket: _bucket,
+        child: IndexedStack(
+          index: _currentIndex,
+          children: _pages,
+        ),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (index) {
@@ -75,6 +84,11 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.my_library_music_outlined),
             selectedIcon: Icon(Icons.my_library_music),
             label: '声音',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.smart_toy_outlined),
+            selectedIcon: Icon(Icons.smart_toy),
+            label: 'AI助眠',
           ),
           NavigationDestination(
             icon: Icon(Icons.timer_outlined),

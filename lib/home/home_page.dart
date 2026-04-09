@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:niceleep/app/state_mgmt/play_manager.dart';
 import 'package:niceleep/app/data_model/sound_asset.dart';
 import 'package:niceleep/app/services/sound_service.dart';
-import 'package:niceleep/ai/ui/ai_chat_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -40,18 +39,6 @@ class _HomePageState extends State<HomePage> {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.smart_toy_outlined),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AiChatPage()),
-              );
-            },
-            tooltip: 'AI 助眠助手',
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
