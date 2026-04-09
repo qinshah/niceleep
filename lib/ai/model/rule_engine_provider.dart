@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:niceleep/ai/model/llm_provider.dart';
+import 'package:niceleep/ai/model/rule/rule_manager.dart';
+import 'package:niceleep/ai/model/skill/hot_sound_skill.dart';
 import 'package:niceleep/app/data_model/sound_asset.dart';
 import 'package:niceleep/app/services/sound_service.dart';
 
@@ -7,50 +9,19 @@ class RuleEngineProvider implements LlmProvider {
   @override
   String get name => 'RuleEngine';
 
-  final Map<String, List<String>> _keywordToCategories = {
-    '睡觉': ['nature', 'rain', 'noise'],
-    '失眠': ['noise', 'nature', 'rain'],
-    '放松': ['nature', 'things', 'rain'],
-    '压力': ['nature', 'noise', 'rain'],
-    '工作': ['noise', 'places', 'things'],
-    '学习': ['noise', 'nature', 'things'],
-    '专注': ['noise', 'nature', 'things'],
-    '冥想': ['nature', 'things', 'noise'],
-    '焦虑': ['nature', 'rain', 'noise'],
-    '雨声': ['rain'],
-    '自然': ['nature'],
-    '白噪音': ['noise'],
-    '动物': ['animals'],
-    '城市': ['urban'],
-    '交通': ['transport'],
-    '场所': ['places'],
-    '物品': ['things'],
-  };
-
-  final Map<String, List<String>> _keywordToSounds = {
-    '下雨': ['light-rain', 'heavy-rain', 'rain-on-umbrella'],
-    '海浪': ['waves'],
-    '河流': ['river'],
-    '篝火': ['campfire'],
-    '森林': ['jungle', 'wind-in-trees'],
-    '蟋蟀': ['crickets'],
-    '鸟鸣': ['birds'],
-    '白噪音': ['white-noise'],
-    '粉红噪音': ['pink-noise'],
-    '棕噪音': ['brown-noise'],
-    '钢琴': ['light-piano', 'piano'],
-    '风铃': ['wind-chimes'],
-  };
+  RuleEngineProvider() {
+    RuleManager.instance.initialize();
+  }
 
   @override
   Future<String> generateResponse(String prompt) async {
-    final recommendation = _generateRecommendation(prompt);
+    final recommendation = await _generateRecommendation(prompt);
     return _formatResponse(recommendation);
   }
 
   @override
   Stream<String> generateResponseStream(String prompt) async* {
-    final recommendation = _generateRecommendation(prompt);
+    final recommendation = await _generateRecommendation(prompt);
     final response = _formatResponse(recommendation);
     
     for (int i = 0; i < response.length; i++) {
@@ -59,45 +30,60 @@ class RuleEngineProvider implements LlmProvider {
     }
   }
 
-  RecommendationResult _generateRecommendation(String prompt) {
-    final lowerPrompt = prompt.toLowerCase();
+  Future<RecommendationResult> _generateRecommendation(String prompt) async {
     final soundService = SoundService.instance;
+    final hotSoundSkill = HotSoundSkill.instance;
     
     List<SoundAsset> recommendedSounds = [];
     String responseType = 'general';
-    bool foundMatch = false;
+    String? prefixMessage;
+    String? suffixMessage;
 
-    for (final entry in _keywordToSounds.entries) {
-      if (lowerPrompt.contains(entry.key.toLowerCase())) {
-        foundMatch = true;
-        for (final soundId in entry.value) {
-          final sound = soundService.searchSounds(soundId);
-          if (sound.isNotEmpty) {
-            recommendedSounds.addAll(sound);
+    final ruleResult = await RuleManager.instance.matchAndExecute(prompt);
+
+    if (ruleResult != null) {
+      responseType = ruleResult.responseType;
+      prefixMessage = ruleResult.prefixMessage;
+      suffixMessage = ruleResult.suffixMessage;
+
+      switch (responseType) {
+        case 'search':
+          if (ruleResult.searchTerm != null) {
+            recommendedSounds = soundService.searchSounds(ruleResult.searchTerm!);
           }
-        }
-        responseType = 'specific';
-        break;
-      }
-    }
-
-    if (!foundMatch) {
-      for (final entry in _keywordToCategories.entries) {
-        if (lowerPrompt.contains(entry.key.toLowerCase())) {
-          foundMatch = true;
-          for (final categoryId in entry.value) {
-            final sounds = soundService.getSoundsByCategoryId(categoryId);
+          if (recommendedSounds.isEmpty) {
+            recommendedSounds = hotSoundSkill.getTopHotSounds(count: 3);
+            prefixMessage = '抱歉，没有找到"${ruleResult.searchTerm}"。给您推荐一些热门音频：';
+          }
+          break;
+        case 'specific':
+          if (ruleResult.soundIds != null) {
+            for (final soundId in ruleResult.soundIds!) {
+              final sound = soundService.searchSounds(soundId);
+              if (sound.isNotEmpty) {
+                recommendedSounds.addAll(sound);
+              }
+            }
+          }
+          break;
+        case 'category':
+          if (ruleResult.searchTerm != null) {
+            final sounds = soundService.getSoundsByCategoryId(ruleResult.searchTerm!);
             recommendedSounds.addAll(sounds.take(2));
           }
-          responseType = 'category';
           break;
-        }
+        case 'greeting':
+        case 'help':
+        case 'search_empty':
+          break;
+        default:
+          recommendedSounds = hotSoundSkill.getTopHotSounds(count: 3);
       }
-    }
-
-    if (!foundMatch) {
-      recommendedSounds = soundService.sounds.take(3).toList();
-      responseType = 'default';
+    } else {
+      responseType = 'confused';
+      prefixMessage = '抱歉，我不太理解您的需求。为您推荐一些热门音频：';
+      suffixMessage = '您可以点击任意音频开始播放。您也可以尝试说："我失眠了"、"推荐雨声" 或 "搜索白噪音"';
+      recommendedSounds = hotSoundSkill.getTopHotSounds(count: 3);
     }
 
     recommendedSounds = recommendedSounds.toSet().toList();
@@ -109,21 +95,31 @@ class RuleEngineProvider implements LlmProvider {
       sounds: recommendedSounds,
       responseType: responseType,
       userPrompt: prompt,
+      prefixMessage: prefixMessage,
+      suffixMessage: suffixMessage,
     );
   }
 
   String _formatResponse(RecommendationResult result) {
     final buffer = StringBuffer();
     
-    buffer.writeln('好的，根据您的需求，我为您推荐以下音频：\n');
-    
-    for (int i = 0; i < result.sounds.length; i++) {
-      final sound = result.sounds[i];
-      buffer.writeln('${i + 1}. **${sound.name}** (${sound.category})');
-      buffer.writeln('   - 可以帮助您放松身心，改善睡眠质量\n');
+    if (result.prefixMessage != null) {
+      buffer.writeln('${result.prefixMessage}\n');
     }
     
-    buffer.writeln('您可以点击任意音频开始播放。如果需要其他推荐，请随时告诉我！');
+    if (result.sounds.isNotEmpty) {
+      for (int i = 0; i < result.sounds.length; i++) {
+        final sound = result.sounds[i];
+        buffer.writeln('${i + 1}. **${sound.name}** (${sound.category})');
+        buffer.writeln('   - 可以帮助您放松身心，改善睡眠质量\n');
+      }
+    }
+    
+    if (result.suffixMessage != null) {
+      buffer.writeln(result.suffixMessage);
+    } else if (result.sounds.isNotEmpty) {
+      buffer.writeln('您可以点击任意音频开始播放。如果需要其他推荐，请随时告诉我！');
+    }
     
     return buffer.toString();
   }
@@ -133,10 +129,14 @@ class RecommendationResult {
   final List<SoundAsset> sounds;
   final String responseType;
   final String userPrompt;
+  final String? prefixMessage;
+  final String? suffixMessage;
 
   RecommendationResult({
     required this.sounds,
     required this.responseType,
     required this.userPrompt,
+    this.prefixMessage,
+    this.suffixMessage,
   });
 }
