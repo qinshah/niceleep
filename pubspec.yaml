@@ -15,7 +15,7 @@ dependencies:
     git:
       url: https://gitcode.com/openharmony-sig/fluttertpc_audio_service.git
       path: audio_service
-      ref: br_v0.18.18_ohos
+      ref: br_v0.18.18_ohos_dev
   audio_session:
     git:
       url: https://gitcode.com/openharmony-sig/flutter_audio_session.git

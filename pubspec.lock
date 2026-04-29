@@ -45,8 +45,8 @@ packages:
     dependency: "direct main"
     description:
       path: audio_service
-      ref: "br_v0.18.18_ohos"
-      resolved-ref: "64156e83e3dfd45a7535894f06d90f7779cff7dc"
+      ref: "br_v0.18.18_ohos_dev"
+      resolved-ref: "2525737111ceb8abc566cb6ac8bcc827982ec4d6"
       url: "https://gitcode.com/openharmony-sig/fluttertpc_audio_service.git"
     source: git
     version: "0.18.18"
