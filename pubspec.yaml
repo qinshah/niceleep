@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.2.0+5
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.10.0
 
 dependencies:
   flutter:
@@ -47,21 +47,12 @@ dependencies:
   icons_launcher: ^3.0.3
   package_info_plus: # app信息.鸿蒙适配
   # 媒体.互相兼容
-  media_kit:
-    git:
-      url: https://github.com/Predidit/media-kit.git
-      ref: afb5a1b179c212eac74a40012f21703d122112a5
-      path: ./media_kit
+  media_kit: # overridden
   media_kit_video:
     git:
       url: https://github.com/Predidit/media-kit.git
-      ref: afb5a1b179c212eac74a40012f21703d122112a5
       path: ./media_kit_video
-  media_kit_libs_video:
-    git:
-      url: https://github.com/Predidit/media-kit.git
-      ref: afb5a1b179c212eac74a40012f21703d122112a5
-      path: ./libs/universal/media_kit_libs_video
+  media_kit_libs_video: # overridden
   # path_provider: # 应用可用路径.鸿蒙适配
   #   git:
   #     url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
@@ -82,26 +73,14 @@ dependency_overrides:
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
       path: "packages/path_provider/path_provider"
   # 媒体.互相兼容
-  media_kit_libs_linux:
+  media_kit:
     git:
       url: https://github.com/Predidit/media-kit.git
-      ref: afb5a1b179c212eac74a40012f21703d122112a5
-      path: ./libs/linux/media_kit_libs_linux
-  media_kit_libs_ios_video:
+      path: ./media_kit
+  media_kit_libs_video:
     git:
       url: https://github.com/Predidit/media-kit.git
-      ref: afb5a1b179c212eac74a40012f21703d122112a5
-      path: ./libs/ios/media_kit_libs_ios_video
-  media_kit_libs_macos_video:
-    git:
-      url: https://github.com/Predidit/media-kit.git
-      ref: afb5a1b179c212eac74a40012f21703d122112a5
-      path: ./libs/macos/media_kit_libs_macos_video
-  media_kit_libs_ohos:
-    git:
-      url: https://github.com/Predidit/media-kit.git
-      ref: afb5a1b179c212eac74a40012f21703d122112a5
-      path: ./libs/ohos/media_kit_libs_ohos
+      path: ./libs/universal/media_kit_libs_video
 
 dev_dependencies:
   flutter_test:
