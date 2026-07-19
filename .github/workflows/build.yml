@@ -61,6 +61,12 @@ jobs:
           flutter --version
           flutter doctor || true
         shell: bash
+        
+      - name: Setup Git LFS
+        run: |
+          sudo apt-get install -y git-lfs
+          git lfs install --skip-smudge
+        shell: bash
 
       - name: Cache pub dependencies
         uses: actions/cache@v4
