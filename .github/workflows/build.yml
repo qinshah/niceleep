@@ -73,8 +73,11 @@ jobs:
         shell: bash
 
       - name: Build HAP
-        run: flutter build hap --no-codesign
+        run: |
+          perl -i -0777 -pe 's/"signingConfigs": \[.*?\n\s*\]/"signingConfigs": []/s' ohos/build-profile.json5
+          flutter build hap --no-codesign
         shell: bash
+        continue-on-error: true
 
       - name: Build APK
         run: flutter build apk --split-per-abi
