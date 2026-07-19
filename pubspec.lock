@@ -46,8 +46,8 @@ packages:
     description:
       path: audio_service
       ref: "br_v0.18.18_ohos"
-      resolved-ref: "64156e83e3dfd45a7535894f06d90f7779cff7dc"
-      url: "https://gitcode.com/openharmony-sig/fluttertpc_audio_service.git"
+      resolved-ref: ac22654a6c8edc30b3d05fac4954de4b19ea85f1
+      url: "https://gitcode.com/CPF-Flutter/fluttertpc_audio_service.git"
     source: git
     version: "0.18.18"
   audio_service_platform_interface:
@@ -71,8 +71,8 @@ packages:
     description:
       path: "."
       ref: "br_v0.2.2_ohos"
-      resolved-ref: "0a7b31fec60fefec0091f99e2697940805cc573b"
-      url: "https://gitcode.com/openharmony-sig/flutter_audio_session.git"
+      resolved-ref: "27f404bdd8a394d6b7e2f6829f18aca8f9165fbc"
+      url: "https://gitcode.com/CPF-Flutter/flutter_audio_session.git"
     source: git
     version: "0.2.2"
   boolean_selector:
@@ -240,8 +240,8 @@ packages:
     description:
       path: "packages/file_selector/file_selector"
       ref: "br_file_selector-v1.0.3_ohos"
-      resolved-ref: eb78bfe71b7164da382d8354058700bfe989878c
-      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      resolved-ref: "3ee6c17af1bfdb59e52f78e469195c1998614f8d"
+      url: "https://gitcode.com/CPF-Flutter/flutter_packages.git"
     source: git
     version: "1.0.3"
   file_selector_android:
@@ -280,8 +280,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/file_selector/file_selector_ohos"
-      ref: HEAD
-      resolved-ref: b6d283d565f70c6aac7a241c2daeed10acc2c675
+      ref: "br_file_selector-v1.0.3_ohos"
+      resolved-ref: "3ee6c17af1bfdb59e52f78e469195c1998614f8d"
       url: "https://gitcode.com/openharmony-sig/flutter_packages.git"
     source: git
     version: "0.5.0+2"
@@ -642,8 +642,8 @@ packages:
     description:
       path: "packages/package_info_plus/package_info_plus"
       ref: "br_package_info_plus-v8.1.0_ohos"
-      resolved-ref: "2180f5bd763cc26478d4f0baba4acdc1528f4647"
-      url: "https://gitcode.com/openharmony-sig/flutter_plus_plugins.git"
+      resolved-ref: "88701b5127dd2ad8f78924dfb758e27567499791"
+      url: "https://gitcode.com/CPF-Flutter/flutter_plus_plugins.git"
     source: git
     version: "8.1.0"
   package_info_plus_platform_interface:
@@ -667,8 +667,8 @@ packages:
     description:
       path: "packages/path_provider/path_provider"
       ref: HEAD
-      resolved-ref: b6d283d565f70c6aac7a241c2daeed10acc2c675
-      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      resolved-ref: "5c69f5f65ac32631846a6a3ae682f1f91c710cc3"
+      url: "https://gitcode.com/CPF-Flutter/flutter_packages.git"
     source: git
     version: "2.1.0"
   path_provider_android:
@@ -978,8 +978,8 @@ packages:
     description:
       path: "packages/url_launcher/url_launcher"
       ref: "br_url_launcher_v6.3.1_ohos"
-      resolved-ref: "34dd2b4ce6a6a9fe5f298d75f8a007b0de0789d2"
-      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      resolved-ref: "3cbdcb35cf5d8e4b4dc18bd9081c98c0c1c97df0"
+      url: "https://gitcode.com/CPF-Flutter/flutter_packages.git"
     source: git
     version: "6.1.12"
   url_launcher_android:
@@ -1018,8 +1018,8 @@ packages:
     dependency: transitive
     description:
       path: "packages/url_launcher/url_launcher_ohos"
-      ref: HEAD
-      resolved-ref: b6d283d565f70c6aac7a241c2daeed10acc2c675
+      ref: "br_url_launcher_v6.3.1_ohos"
+      resolved-ref: "3cbdcb35cf5d8e4b4dc18bd9081c98c0c1c97df0"
       url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
     source: git
     version: "6.0.38"

@@ -13,34 +13,34 @@ dependencies:
   # 媒体通知.鸿蒙适配
   audio_service:
     git:
-      url: https://gitcode.com/openharmony-sig/fluttertpc_audio_service.git
+      url: https://gitcode.com/CPF-Flutter/fluttertpc_audio_service.git
       path: audio_service
       ref: br_v0.18.18_ohos
   audio_session:
     git:
-      url: https://gitcode.com/openharmony-sig/flutter_audio_session.git
+      url: https://gitcode.com/CPF-Flutter/flutter_audio_session.git
       ref: br_v0.2.2_ohos
    # hive存储，纯dart，支持鸿蒙
   hive_ce: ^2.16.0
   hive_ce_flutter: ^2.3.3
   # shared_preferences: # 存储.鸿蒙适配
   #   git:
-  #     url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+  #     url: "https://gitcode.com/CPF-Flutter/flutter_packages.git"
   #     path: "packages/shared_preferences/shared_preferences"
   #     ref: "br_shared_preferences-v2.5.3_ohos"
   file_selector: # 文件选择器.鸿蒙适配
     git:
-      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      url: "https://gitcode.com/CPF-Flutter/flutter_packages.git"
       path: "packages/file_selector/file_selector"
       ref: br_file_selector-v1.0.3_ohos
   url_launcher: # 打开链接.鸿蒙适配
     git:
-      url: https://gitcode.com/openharmony-tpc/flutter_packages.git
+      url: https://gitcode.com/CPF-Flutter/flutter_packages.git
       path: packages/url_launcher/url_launcher
       ref: br_url_launcher_v6.3.1_ohos
   # audioplayers: # 音频播放.鸿蒙适配
   #   git:
-  #     url: https://gitcode.com/openharmony-sig/flutter_audioplayers.git
+  #     url: https://gitcode.com/CPF-Flutter/flutter_audioplayers.git
   #     path: packages/audioplayers
   #     ref: br_v6.5.0_ohos
   provider: ^6.1.5+1
@@ -55,13 +55,13 @@ dependencies:
   media_kit_libs_video: # overridden
   # path_provider: # 应用可用路径.鸿蒙适配
   #   git:
-  #     url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+  #     url: "https://gitcode.com/CPF-Flutter/flutter_packages.git"
   #     path: "packages/path_provider/path_provider"
 
 dependency_overrides:
   package_info_plus: # app信息.鸿蒙适配
     git:
-      url: https://gitcode.com/openharmony-sig/flutter_plus_plugins.git
+      url: https://gitcode.com/CPF-Flutter/flutter_plus_plugins.git
       path: packages/package_info_plus/package_info_plus
       ref: br_package_info_plus-v8.1.0_ohos
   # # 修复鸿蒙audioplayers在其它平台出错
@@ -70,7 +70,7 @@ dependency_overrides:
   # audioplayers_platform_interface: ^7.1.1
   path_provider: # 应用可用路径.鸿蒙适配
     git:
-      url: "https://gitcode.com/openharmony-tpc/flutter_packages.git"
+      url: "https://gitcode.com/CPF-Flutter/flutter_packages.git"
       path: "packages/path_provider/path_provider"
   # 媒体.互相兼容
   media_kit:
