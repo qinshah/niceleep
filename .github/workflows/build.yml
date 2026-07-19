@@ -53,33 +53,12 @@ jobs:
           echo "$GITHUB_WORKSPACE/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
         shell: bash
 
-      - name: Cache Android SDK
-        id: cache-android
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/Android/Sdk
-            ~/.android
-          key: android-sdk-34-${{ runner.os }}
-
       - name: Setup Android SDK
-        if: steps.cache-android.outputs.cache-hit != 'true'
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK components
         run: |
-          export ANDROID_HOME=$HOME/Android/Sdk
-          mkdir -p $ANDROID_HOME
-          cd $ANDROID_HOME
-          curl -fsSL -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q commandlinetools.zip
-          mkdir -p cmdline-tools/latest
-          mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
-          rm -rf cmdline-tools
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null 2>&1 || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
-          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
-          echo "$ANDROID_HOME/build-tools/34.0.0" >> $GITHUB_PATH
-        shell: bash
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: Verify Flutter environment
         run: |
