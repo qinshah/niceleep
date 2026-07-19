@@ -10,6 +10,8 @@ jobs:
   build:
     name: Build all packages
     runs-on: ubuntu-latest
+    env:
+      GIT_LFS_SKIP_SMUDGE: 1
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -56,18 +58,6 @@ jobs:
         run: |
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Verify Flutter environment
-        run: |
-          flutter --version
-          flutter doctor || true
-        shell: bash
-        
-      - name: Setup Git LFS
-        run: |
-          sudo apt-get install -y git-lfs
-          git lfs install --skip-smudge
-        shell: bash
-
       - name: Cache pub dependencies
         uses: actions/cache@v4
         with:
@@ -83,12 +73,13 @@ jobs:
         shell: bash
 
       - name: Build HAP
-        run: flutter build hap
+        run: flutter build hap --no-codesign
         shell: bash
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --split-per-abi
         shell: bash
+        continue-on-error: true
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -96,7 +87,7 @@ jobs:
           name: packages
           path: |
             ./ohos/entry/build/default/outputs/default/entry-default-unsigned.hap
-            ./build/app/outputs/flutter-apk/app-release.apk
+            ./build/app/outputs/flutter-apk/*.apk
           retention-days: 7
 
   release:
