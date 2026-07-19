@@ -1,0 +1,141 @@
+name: build
+
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build all packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl xz-utils zip libglu1-mesa unzip
+        shell: bash
+
+      - name: Setup HarmonyOS toolchain
+        uses: ErBWs/setup-ohos@v1
+        with:
+          version: latest
+          cache: true
+
+      - name: Setup JDK21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Cache Flutter SDK
+        id: cache-flutter
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/flutter
+          key: flutter-oh-3.41.9-release-${{ runner.os }}
+
+      - name: Setup Flutter (shared)
+        if: steps.cache-flutter.outputs.cache-hit != 'true'
+        run: |
+          git clone -b oh-3.41.9-release --depth 1 https://gitcode.com/CPF-Flutter/flutter_flutter.git $GITHUB_WORKSPACE/flutter
+        shell: bash
+
+      - name: Add Flutter to PATH
+        run: |
+          echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+          echo "$GITHUB_WORKSPACE/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+        shell: bash
+
+      - name: Cache Android SDK
+        id: cache-android
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Android/Sdk
+            ~/.android
+          key: android-sdk-34-${{ runner.os }}
+
+      - name: Setup Android SDK
+        if: steps.cache-android.outputs.cache-hit != 'true'
+        run: |
+          export ANDROID_HOME=$HOME/Android/Sdk
+          mkdir -p $ANDROID_HOME
+          cd $ANDROID_HOME
+          curl -fsSL -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools.zip
+          mkdir -p cmdline-tools/latest
+          mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
+          rm -rf cmdline-tools
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null 2>&1 || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
+          echo "$ANDROID_HOME/build-tools/34.0.0" >> $GITHUB_PATH
+        shell: bash
+
+      - name: Verify Flutter environment
+        run: |
+          flutter --version
+          flutter doctor || true
+        shell: bash
+        continue-on-error: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Get Flutter dependencies
+        run: flutter pub get
+        shell: bash
+
+      - name: Build HAP
+        run: flutter build hap
+        shell: bash
+
+      - name: Build APK
+        run: flutter build apk --release
+        shell: bash
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: |
+            ./ohos/entry/build/default/outputs/default/entry-default-unsigned.hap
+            ./build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
+
+  release:
+    name: Create Release
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: packages
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          draft: true
+          files: packages/*
